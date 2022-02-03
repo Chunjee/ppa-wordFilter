@@ -56,12 +56,12 @@ fn_submit(neutron, event)
 		}
 	}
 
-	; remove words that don't contain valid letters
+	; remove words that don't contain all valid letters
 	if (!A.size(formData.validletters) == 0) {
 		canidatesArr2 := []
 		for _, thisWord in canidatesArr {
-			eachValidLetters := strSplit(formData.validletters)
-			if (A.intersection(thisWord, eachValidLetters).length() > 0) {
+			eachValidLetters := A.compact(strSplit(formData.validletters))
+			if (A.intersection(thisWord, eachValidLetters).length() >= eachValidLetters.length()) {
 				canidatesArr2.push(thisWord)
 			}
 		}
@@ -71,7 +71,7 @@ fn_submit(neutron, event)
 
 	; build valid letters object
 	idealCanidateFn := A.matches(fn_customCompact({1: formData.input1, 2: formData.input2, 3: formData.input3, 4: formData.input4, 5: formData.input5}))
-	; print(canidatesArr)
+	; filter by ideal object
 	canidatesArr := A.filter(canidatesArr, idealCanidateFn)
 	canidatesArrOutput := []
 	for _, wordArr in canidatesArr {
@@ -80,6 +80,7 @@ fn_submit(neutron, event)
 
 	html := gui_generateTable(canidatesArrOutput, ["word"])
 	neutron.qs("#ahk_output").innerHTML := html
+	neutron.qs("#ahk_canidatesCount").innerHTML := canidatesArrOutput.count() " canidate words"
 }
 
 
