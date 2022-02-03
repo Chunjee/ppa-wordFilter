@@ -72,24 +72,21 @@ fn_submit(neutron, event)
 	idealCanidateFn := A.matches(fn_customCompact({1: formData.input1, 2: formData.input2, 3: formData.input3, 4: formData.input4, 5: formData.input5}))
 	; print(canidatesArr)
 	canidatesArr := A.filter(canidatesArr, idealCanidateFn)
-	print(canidatesArr)
 	canidatesArrOutput := []
 	for _, wordArr in canidatesArr {
 		canidatesArrOutput.push({"word": A.join(wordArr, "")})
 	}
-	print(canidatesArrOutput)
-
 
 	html := gui_generateTable(canidatesArrOutput, ["word"])
 	neutron.qs("#ahk_output").innerHTML := html
 }
 
 
-; FileInstall all dependencies
-FileInstall, gui\Bootstrap.html, gui\Bootstrap.html
-FileInstall, gui\bootstrap.min.css, gui\bootstrap.min.css
-FileInstall, gui\bootstrap.min.js, gui\bootstrap.min.js
-FileInstall, gui\jquery.min.js, gui\jquery.min.js
+; fileInstall all dependencies
+fileInstall, gui\Bootstrap.html, gui\Bootstrap.html
+fileInstall, gui\bootstrap.min.css, gui\bootstrap.min.css
+fileInstall, gui\bootstrap.min.js, gui\bootstrap.min.js
+fileInstall, gui\jquery.min.js, gui\jquery.min.js
 
 NeutronClose:
 exitApp
@@ -113,29 +110,4 @@ fn_customCompact(param_arr)
 		l_obj[key] := value
 	}
 	return l_obj
-}
-
-#Persistent
-print(obj, quote:=False, end:="`n")
-{
-	static _ := DllCall("AllocConsole"), cout := FileOpen("CONOUT$", "w")
-	, escapes := [["``", "``" "``"], ["""", """"""], ["`b", "``b"]
-	, ["`f", "``f"], ["`r", "``r"], ["`n", "``n"], ["`t", "``t"]]
-	if IsObject(obj) {
-		for k in obj
-			is_array := k == A_Index
-		until !is_array
-		cout.Write(is_array ? "[" : "{")
-		for k, v in obj {
-			cout.Write(A_Index > 1 ? ", " : "")
-			is_array ? _ : Print(k, 1, "") cout.Write(": ")
-			Print(v, 1, "")
-		} return cout.Write(( is_array ? "]" : "}") end), end ? cout.__Handle : _
-	} if (!quote || ObjGetCapacity([obj], 1) == "")
-		return cout.Write(obj . end), end ? cout.__Handle : _
-	for k, v in escapes
-		obj := StrReplace(obj, v[1], v[2])
-	while RegExMatch(obj, "O)[^\x20-\x7e]", m)
-		obj := StrReplace(obj, m[0], Format(""" Chr({:04d}) """, Ord(m[0])))
-	return cout.Write("""" obj """" . end), end ? cout.__Handle : _
 }
