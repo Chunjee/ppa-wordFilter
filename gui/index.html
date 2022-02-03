@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="bootstrap.min.css" rel="stylesheet">
+	<script src="jquery.min.js"></script>
+	<script src="bootstrap.min.js"></script>
+
+	<style>
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+		}
+
+		.title-btn {
+			padding: 0.35em 1.0em;
+			cursor: pointer;
+			vertical-align: bottom;
+			font-family: Webdings;
+			font-size: 11pt;
+		}
+
+		.title-btn:hover {
+			background: rgba(0, 0, 0, .2);
+		}
+
+		.title-btn-close:hover {
+			background: #dc3545;
+		}
+	</style>
+</head>
+
+<body class="d-flex flex-column">
+
+	<!-- Title Bar -->
+	<header>
+		<div class="d-flex align-items-stretch bg-dark text-white">
+			<span class="flex-grow-1 px-2 py-1" onmousedown="neutron.DragTitleBar()">Wordle Helper</span>
+			<span class="title-btn" onclick="neutron.Minimize()">0</span>
+			<span class="title-btn" onclick="neutron.Maximize()">1</span>
+			<span class="title-btn title-btn-close" onclick="neutron.Close()">r</span>
+		</div>
+	</header>
+	<!-- End Title Bar -->
+
+	<!-- Window Contents -->
+	<div class="flex-grow-1 d-flex">
+
+		<!-- Sidebar -->
+		<div class="nav flex-column nav-pills bg-dark text-light" id="v-pills-tab" role="tablist"
+			aria-orientation="vertical">
+			<a class="nav-link text-light active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+				aria-controls="v-pills-home" aria-selected="true">Home</a>
+			<!-- <a class="nav-link text-light" id="v-pills-buttons-tab" data-toggle="pill" href="#v-pills-buttons" role="tab" -->
+				<!-- aria-controls="v-pills-buttons" aria-selected="false">Settings</a> -->
+		</div>
+		<!-- End Sidebar -->
+
+		<!-- Page Content -->
+		<div class="flex-grow-1 overflow-auto">
+			<div class="tab-content container p-2" id="v-pills-tabContent">
+
+				<!-- v-pills-home -->
+				<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+					<form onsubmit="ahk.fn_submit(event)">
+						<h3>Confirmed Letters</h3>
+						<div class="form-group">
+							<div class="form-row">
+							<div class="form-group col-md-2">
+								<label for="input1">Letter 1</label>
+								<input type="input" class="form-control" id="input1" value="S">
+							</div>
+							<div class="form-group col-md-2">
+								<label for="input2">Letter 2</label>
+								<input type="input" class="form-control" id="input2" value="H">
+							</div>
+							<div class="form-group col-md-2">
+								<label for="input3">Letter 3</label>
+								<input type="input" class="form-control" id="input3" value="A">
+							</div>
+							<div class="form-group col-md-2">
+								<label for="input4">Letter 4</label>
+								<input type="input" class="form-control" id="input4" value="">
+							</div>
+							<div class="form-group col-md-2">
+								<label for="input5">Letter 5</label>
+								<input type="input" class="form-control" id="input5" value="">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="validletters">Valid Letters</label>
+								<input type="input" class="form-control" id="validletters" value="">
+							</div>
+							<div class="form-group col-md-6">
+								<label for="blacklistedletters">Blacklisted Letters</label>
+								<input type="input" class="form-control" id="blacklistedletters" value="">
+							</div>
+							</div>
+						<div class="form-group">
+						</div>
+						<button type="submit" class="btn btn-primary">Find</button>
+					</form>
+					<br><br>
+					<!-- <p>
+						<span id="ahk_output"></span>
+					</p> -->
+
+				</div>
+				<div class="col-lg-12">
+					<p>Output</p>
+					<div id="ahk_output" class="mainOutput" style="max-height: 10px; max-width: 100%;"></div>
+				</div>
+				<br>
+				<!-- End v-pills-home -->
+			</div>
+		</div>
+		<!-- End Page Contents -->
+
+	</div>
+	<!-- End Window Contents -->
+</body>
+
+</html>

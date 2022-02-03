@@ -1,0 +1,18 @@
+{
+	"name": "ppa-wordlehelper",
+	"version": "0.1.0",
+	"description": "searches for wordle words",
+	"main": "app.ahk",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Chunjee/ppa-wordlehelper"
+	},
+	"dependencies": {
+		"array.ahk": "^0.1.8",
+		"biga.ahk": "^0.51.0",
+		"neutron.ahk": "chunjee/neutron.ahk"
+	},
+	"devDependencies": {},
+	"author": "Shawn Brooker",
+	"license": "MIT"
+}
