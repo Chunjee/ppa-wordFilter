@@ -40,7 +40,7 @@ fn_submit(neutron, event)
 	formData := neutron.GetFormData(event.target)
 
 	; formData
-	; "input1":"S", "input2":"H", "input3":"A", "input4":"", "input5":"", "validletters":"", "blacklistedletters":""
+	; => {"input1":"", "input2":"", "input3":"", "input4":"", "input5":"", "validletters":"", "blacklistedletters":"", "wrong1":"", "wrong2":"", "wrong3":"", "wrong4":"", "wrong5":""}
 
 	canidatesArr := []
 	; remove blacklisted letter words
@@ -57,10 +57,12 @@ fn_submit(neutron, event)
 	}
 
 	; remove words that don't contain all valid letters
-	if (!A.size(formData.validletters) == 0) {
+	validletters := A.concat(A.toArray(formData.validletters), {1: formData.wrong1, 2: formData.wrong2, 3: formData.wrong3, 4: formData.wrong4, 5: formData.wrong5})
+	validletters := A.compact(A.uniq(A.map(validletters, A.toLower)))
+	if (A.size(validletters) != 0) {
 		canidatesArr2 := []
 		for _, thisWord in canidatesArr {
-			eachValidLetters := A.compact(strSplit(formData.validletters))
+			eachValidLetters := A.compact(validletters)
 			if (A.intersection(thisWord, eachValidLetters).length() >= eachValidLetters.length()) {
 				canidatesArr2.push(thisWord)
 			}
@@ -73,9 +75,22 @@ fn_submit(neutron, event)
 	idealCanidateFn := A.matches(fn_customCompact({1: formData.input1, 2: formData.input2, 3: formData.input3, 4: formData.input4, 5: formData.input5}))
 	; filter by ideal object
 	canidatesArr := A.filter(canidatesArr, idealCanidateFn)
+
+
+	; Correct letter, wrong spot
+	unCanidatesArr := fn_createAndFindAllMatches(canidatesArr, {1: formData.wrong1, 2: formData.wrong2, 3: formData.wrong3, 4: formData.wrong4, 5: formData.wrong5})
+	; 122 before optimizations
+
+	; flatten both arrays, as A.difference is slow with complicated objects
+	canidatesArrFlat := fn_joinDeep(canidatesArr)
+	; remove impossible words from canidate array
+	unCanidatesArrFlat := A.uniq(fn_joinDeep(unCanidatesArr))
+	newCanidatesArrFlat := A.difference(canidatesArrFlat, unCanidatesArrFlat)
+
+	; turn array into keyed array for html output
 	canidatesArrOutput := []
-	for _, wordArr in canidatesArr {
-		canidatesArrOutput.push({"word": A.join(wordArr, "")})
+	for _, wordArr in newCanidatesArrFlat {
+		canidatesArrOutput.push({"word": wordArr})
 	}
 
 	html := gui_generateTable(canidatesArrOutput, ["word"])
@@ -112,4 +127,26 @@ fn_customCompact(param_arr)
 		l_obj[key] := value
 	}
 	return l_obj
+}
+
+fn_createAndFindAllMatches(param_haystack, param_object)
+{
+	global A
+
+	allmatches := []
+	for key, value in param_object {
+		allmatches := A.concat(allmatches, A.filter(param_haystack, A.matchesProperty(key, value)))
+	}
+	return allmatches
+}
+
+fn_joinDeep(param_array)
+{
+	global A
+
+	l_array := []
+	for _, value in param_array {
+		l_array.push(A.join(value, ""))
+	}
+	return l_array
 }
