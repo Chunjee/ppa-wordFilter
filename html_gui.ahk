@@ -1,9 +1,8 @@
-gui_generateTable(param_data, param_columns:="", param_style:="table-bordered table-striped")
+gui_generateTable(param_data, param_columns:="", param_includehead:=1, param_style:="table-bordered table-striped")
 {
 	static nw := NeutronWindow
 
-	if !param_columns
-	{
+	if (!param_columns)	{
 		param_columns := []
 		for _, object in param_data {
 			for key, value in object {
@@ -15,8 +14,10 @@ gui_generateTable(param_data, param_columns:="", param_style:="table-bordered ta
 	}
 
 	out := "<table class=""table " param_style " ""><thead class=""thead-dark""><tr>"
-	for _, title in param_columns
-		out .= nw.FormatHTML("<th scope=""col"">{}</th>", title)
+	if (param_includehead) {
+		for _, title in param_columns
+			out .= nw.FormatHTML("<th scope=""col"">{}</th>", title)
+	}
 	out .= "</tr></thead>"
 
 	out .= "<tbody>"
@@ -25,7 +26,7 @@ gui_generateTable(param_data, param_columns:="", param_style:="table-bordered ta
 		out .= "<tr>"
 		for _, title in param_columns {
 			if (inStr(row[title], ".jpeg") || inStr(row[title], ".jpg")) {
-				out .= nw.FormatHTML("<td><img src='{}' width='100'></td>", row[title])
+				out .= nw.FormatHTML("<td><img src='{}' width='25%'></td>", row[title])
 				continue
 			}
 			if (title == "id") {

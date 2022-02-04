@@ -10,8 +10,11 @@ SetBatchLines, -1
 #Include array.ahk\export.ahk
 #Include neutron.ahk\export.ahk
 
-
+; variables
 global A := new biga()
+global commonAlpha := ["e", "a", "r", "i", "o", "t", "n", "s", "l", "c", "u", "d", "p", "m", "h", "g", "b", "f", "y", "w", "k", "v"
+, "x", "z", "j", "q"]
+
 
 ; Create a new NeutronWindow and navigate to our HTML page
 neutron := new NeutronWindow()
@@ -93,7 +96,7 @@ fn_submit(neutron, event)
 		canidatesArrOutput.push({"word": wordArr})
 	}
 
-	html := gui_generateTable(canidatesArrOutput, ["word"])
+	html := gui_generateTable(fn_chunkTable(newCanidatesArrFlat), [1,2,3,4,5], false)
 	neutron.qs("#ahk_output").innerHTML := html
 	neutron.qs("#ahk_canidatesCount").innerHTML := canidatesArrOutput.count() " canidate words"
 }
@@ -109,6 +112,22 @@ NeutronClose:
 exitApp
 return
 
+; ------------------
+; subroutines
+; ------------------
+
+; of remaining words, sort by ones with most missing characters
+fn_sortByMissing(param_canidatesArr, param_remainingcharacters)
+{
+	global A
+
+	canidatesArr := []
+	for _, word in param_canidatesArr {
+		letters := A.intersection(word, param_remainingcharacters)
+		canidatesArr.push({"word": word, "letters": A.size(letters)})
+	}
+	return A.sortBy(canidatesArr, "letters")
+}
 
 
 ; ------------------
@@ -149,4 +168,11 @@ fn_joinDeep(param_array)
 		l_array.push(A.join(value, ""))
 	}
 	return l_array
+}
+
+fn_chunkTable(param_data)
+{
+	l_data := biga.chunk(param_data, 5)
+	; msgbox, % biga.print(l_data)
+	return l_data
 }
