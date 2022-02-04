@@ -1,7 +1,7 @@
 # wordlehelper.ahk
 A simple wordle solving app with a GUI
 
-<img src="https://raw.githubusercontent.com/chunjee/ppa-wordlehelper.ahk/preview.png"/>
+<img src="https://github.com/Chunjee/ppa-wordlehelper/blob/master/preview.png"/>
 
 ## Installation
 
