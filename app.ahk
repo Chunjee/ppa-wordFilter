@@ -60,7 +60,8 @@ fn_submit(neutron, event)
 	}
 
 	; remove words that don't contain all valid letters
-	validletters := A.concat(A.toArray(formData.validletters), {1: formData.wrong1, 2: formData.wrong2, 3: formData.wrong3, 4: formData.wrong4, 5: formData.wrong5})
+	validletters := A.concat(A.toArray(formData.validletters), formData.wrong1, formData.wrong2, formData.wrong3, formData.wrong4, formData.wrong5)
+	validletters := A.concat(validletters, formData.input1, formData.input2, formData.input3, formData.input4, formData.input5)
 	validletters := A.compact(A.uniq(A.map(validletters, A.toLower)))
 	if (A.size(validletters) != 0) {
 		canidatesArr2 := []
@@ -96,9 +97,18 @@ fn_submit(neutron, event)
 		canidatesArrOutput.push({"word": wordArr})
 	}
 
-	html := gui_generateTable(fn_chunkTable(newCanidatesArrFlat), [1,2,3,4,5], false)
+	html := gui_generateTable(A.chunk(newCanidatesArrFlat, 5), [1,2,3,4,5], false)
 	neutron.qs("#ahk_output").innerHTML := html
-	neutron.qs("#ahk_canidatesCount").innerHTML := canidatesArrOutput.count() " canidate words"
+	neutron.qs("#ahk_canidatesCount").innerHTML := newCanidatesArrFlat.count() " canidate words"
+
+	; exploritory words
+	exploreWords := fn_sortByMissing(wordsArr, A.difference(commonAlpha, A.concat(validletters, eachBlacklistedLetters)))
+	exploreWordsFlat := []
+	for key, value in exploreWords {
+		exploreWordsFlat.push(value.word)
+	}
+	html := gui_generateTable(A.chunk(exploreWordsFlat, 5), [1,2,3,4,5], false)
+	neutron.qs("#ahk_exploreoutput").innerHTML := html
 }
 
 
@@ -119,14 +129,13 @@ return
 ; of remaining words, sort by ones with most missing characters
 fn_sortByMissing(param_canidatesArr, param_remainingcharacters)
 {
-	global A
-
 	canidatesArr := []
 	for _, word in param_canidatesArr {
-		letters := A.intersection(word, param_remainingcharacters)
-		canidatesArr.push({"word": word, "letters": A.size(letters)})
+		letters := biga.intersection(strSplit(word), param_remainingcharacters)
+		canidatesArr.push({"word": word, "letters": biga.size(letters)})
 	}
-	return A.sortBy(canidatesArr, "letters")
+	; sort and reverse (larger missing numbers to smallest)
+	return biga.reverse(biga.sortBy(canidatesArr, "letters"))
 }
 
 
@@ -150,29 +159,25 @@ fn_customCompact(param_arr)
 
 fn_createAndFindAllMatches(param_haystack, param_object)
 {
-	global A
-
 	allmatches := []
 	for key, value in param_object {
-		allmatches := A.concat(allmatches, A.filter(param_haystack, A.matchesProperty(key, value)))
+		allmatches := biga.concat(allmatches, biga.filter(param_haystack, biga.matchesProperty(key, value)))
 	}
 	return allmatches
 }
 
 fn_joinDeep(param_array)
 {
-	global A
-
 	l_array := []
 	for _, value in param_array {
-		l_array.push(A.join(value, ""))
+		l_array.push(biga.join(value, ""))
 	}
 	return l_array
 }
 
 fn_chunkTable(param_data)
 {
+	; would be nice if this lined them verticle, currently horizontal
 	l_data := biga.chunk(param_data, 5)
-	; msgbox, % biga.print(l_data)
 	return l_data
 }

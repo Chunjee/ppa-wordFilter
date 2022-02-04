@@ -53,8 +53,8 @@
 			aria-orientation="vertical">
 			<a class="nav-link text-light active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
 				aria-controls="v-pills-home" aria-selected="true">Home</a>
-			<!-- <a class="nav-link text-light" id="v-pills-buttons-tab" data-toggle="pill" href="#v-pills-buttons" role="tab" -->
-				<!-- aria-controls="v-pills-buttons" aria-selected="false">Settings</a> -->
+			<a class="nav-link text-light" id="v-pills-suggestions-tab" data-toggle="pill" href="#v-pills-suggestions" role="tab"
+				aria-controls="v-pills-suggestions" aria-selected="false">Suggestions</a>
 		</div>
 		<!-- End Sidebar -->
 
@@ -136,8 +136,17 @@
 					<p>Output: <span id="ahk_canidatesCount"></span></p>
 					<div id="ahk_output" class="mainOutput" style="max-height: 10px; max-width: 100%;"></div>
 				</div>
-				<br>
+				<br><br>
+			</div>
 				<!-- End v-pills-home -->
+
+				<!-- v-pills-suggestions -->
+				<div class="tab-pane fade" id="v-pills-suggestions" role="tabpanel" aria-labelledby="v-pills-suggestions-tab">
+					<h3>Exploritory Words</h3>
+					<div id="ahk_exploreoutput" class="ahk_exploreoutput" style="max-height: 10px; max-width: 100%;"></div>
+				</div>
+				<!-- End v-pills-buttons -->
+
 			</div>
 		</div>
 		<!-- End Page Contents -->
