@@ -15,6 +15,9 @@ global A := new biga()
 global commonAlpha := ["e", "a", "r", "i", "o", "t", "n", "s", "l", "c", "u", "d", "p", "m", "h", "g", "b", "f", "y", "w", "k", "v"
 , "x", "z", "j", "q"]
 
+global exploreWordsFlat
+; global exploreWordsFlat
+
 
 ; Create a new NeutronWindow and navigate to our HTML page
 neutron := new NeutronWindow()
@@ -112,6 +115,29 @@ fn_submit(neutron, event)
 }
 
 
+fn_filter(neutron, event)
+{
+	event.preventDefault()
+	formData := neutron.GetFormData(event.target)
+
+	filteredSuggestions := []
+	filterVals := biga.uniq(strSplit(formData.filtervals))
+	for _, value in exploreWordsFlat {
+		gateVar := true
+		for _, letter in filterVals {
+			if (!A.includes(value, letter)) {
+				gateVar := false
+			}
+		}
+		if (gateVar) {
+			filteredSuggestions.push(value)
+			; msgbox, % biga.print(filterVals) " all found in " value
+		}
+	}
+	html := gui_generateTable(A.chunk(filteredSuggestions, 5), [1,2,3,4,5], false)
+	neutron.qs("#ahk_exploreoutput").innerHTML := html
+}
+
 ; fileInstall all dependencies
 fileInstall, gui\Bootstrap.html, gui\Bootstrap.html
 fileInstall, gui\bootstrap.min.css, gui\bootstrap.min.css
@@ -132,7 +158,8 @@ fn_sortByMissing(param_canidatesArr, param_remainingcharacters)
 	canidatesArr := []
 	for _, word in param_canidatesArr {
 		letters := biga.intersection(strSplit(word), param_remainingcharacters)
-		canidatesArr.push({"word": word, "letters": biga.size(letters)})
+		; remember the word and uniq unknown letters
+		canidatesArr.push({"word": word, "letters": biga.size(biga.uniq(letters))})
 	}
 	; sort and reverse (larger missing numbers to smallest)
 	return biga.reverse(biga.sortBy(canidatesArr, "letters"))

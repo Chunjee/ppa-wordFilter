@@ -37,7 +37,7 @@
 	<!-- Title Bar -->
 	<header>
 		<div class="d-flex align-items-stretch bg-dark text-white">
-			<span class="flex-grow-1 px-2 py-1" onmousedown="neutron.DragTitleBar()">Wordle Helper</span>
+			<span class="flex-grow-1 px-2 py-1" onmousedown="neutron.DragTitleBar()">Wordle Boost</span>
 			<span class="title-btn" onclick="neutron.Minimize()">0</span>
 			<span class="title-btn" onclick="neutron.Maximize()">1</span>
 			<span class="title-btn title-btn-close" onclick="neutron.Close()">r</span>
@@ -55,6 +55,8 @@
 				aria-controls="v-pills-home" aria-selected="true">Home</a>
 			<a class="nav-link text-light" id="v-pills-suggestions-tab" data-toggle="pill" href="#v-pills-suggestions" role="tab"
 				aria-controls="v-pills-suggestions" aria-selected="false">Suggestions</a>
+			<a class="nav-link text-light" id="v-pills-probabilities-tab" data-toggle="pill" href="#v-pills-probabilities" role="tab"
+				aria-controls="v-pills-probabilities" aria-selected="false">Probabilities</a>
 		</div>
 		<!-- End Sidebar -->
 
@@ -142,10 +144,27 @@
 
 				<!-- v-pills-suggestions -->
 				<div class="tab-pane fade" id="v-pills-suggestions" role="tabpanel" aria-labelledby="v-pills-suggestions-tab">
-					<h3>Exploritory Words</h3>
+					<form onsubmit="ahk.fn_filter(event)">
+						<div class="form-group">
+							<div class="form-row">
+								<div class="form-group col-md-2">
+									<label for="filtervals">Filter By</label>
+									<input type="input" class="form-control" id="filtervals" value="">
+								</div>
+								<button type="submit" class="btn btn-primary">Filter</button>
+							</form>
+						</div>
+						<h3>Exploritory Words</h3>
 					<div id="ahk_exploreoutput" class="ahk_exploreoutput" style="max-height: 10px; max-width: 100%;"></div>
 				</div>
-				<!-- End v-pills-buttons -->
+				<!-- End v-pills-suggestions -->
+
+				<!-- v-pills-probabilities -->
+				<div class="tab-pane fade" id="v-pills-probabilities" role="tabpanel" aria-labelledby="v-pills-probabilities-tab">
+					<h3>Letter Probabilities</h3>
+					<div id="ahk_exploreoutput" class="ahk_exploreoutput" style="max-height: 10px; max-width: 100%;"></div>
+				</div>
+				<!-- End v-pills-probabilities -->
 
 			</div>
 		</div>
