@@ -46,7 +46,7 @@ fn_submit(neutron, event)
 	formData := neutron.GetFormData(event.target)
 
 	; formData
-	; => {"input1":"", "input2":"", "input3":"", "input4":"", "input5":"", "validletters":"", "blacklistedletters":"", "wrong1":"", "wrong2":"", "wrong3":"", "wrong4":"", "wrong5":""}
+	; => {"input1":"", "input2":"", "input3":"", "input4":"", "input5":"", "blacklistedletters":"", "wrong1":"", "wrong2":"", "wrong3":"", "wrong4":"", "wrong5":""}
 
 	canidatesArr := []
 	; remove blacklisted letter words
@@ -63,9 +63,10 @@ fn_submit(neutron, event)
 	}
 
 	; remove words that don't contain all valid letters
-	validletters := A.concat(A.toArray(formData.validletters), formData.wrong1, formData.wrong2, formData.wrong3, formData.wrong4, formData.wrong5)
+	validletters := A.concat([], formData.wrong1, formData.wrong2, formData.wrong3, formData.wrong4, formData.wrong5)
 	validletters := A.concat(validletters, formData.input1, formData.input2, formData.input3, formData.input4, formData.input5)
-	validletters := A.compact(A.uniq(A.map(validletters, A.toLower)))
+	validletters := A.compact(A.map(validletters, A.toLower))
+	validletters := A.uniq(strSplit(A.join(validletters, "")))
 	if (A.size(validletters) != 0) {
 		canidatesArr2 := []
 		for _, thisWord in canidatesArr {
@@ -78,7 +79,7 @@ fn_submit(neutron, event)
 	}
 
 
-	; build valid letters object
+	; build ideal letters object
 	idealCanidateFn := A.matches(fn_customCompact({1: formData.input1, 2: formData.input2, 3: formData.input3, 4: formData.input4, 5: formData.input5}))
 	; filter by ideal object
 	canidatesArr := A.filter(canidatesArr, idealCanidateFn)
@@ -131,7 +132,6 @@ fn_filter(neutron, event)
 		}
 		if (gateVar) {
 			filteredSuggestions.push(value)
-			; msgbox, % biga.print(filterVals) " all found in " value
 		}
 	}
 	html := gui_generateTable(A.chunk(filteredSuggestions, 5), [1,2,3,4,5], false)
@@ -188,7 +188,11 @@ fn_createAndFindAllMatches(param_haystack, param_object)
 {
 	allmatches := []
 	for key, value in param_object {
-		allmatches := biga.concat(allmatches, biga.filter(param_haystack, biga.matchesProperty(key, value)))
+		value := biga.toArray(value)
+		for key2, value2 in value {
+			allmatches := biga.concat(allmatches, biga.filter(param_haystack, biga.matchesProperty(key, value2)))
+			; msgbox, % biga.print(key ": " value2 " found these: " fn_joinDeep(allmatches))
+		}
 	}
 	return allmatches
 }
