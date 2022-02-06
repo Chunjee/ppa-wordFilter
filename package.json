@@ -1,11 +1,11 @@
 {
-	"name": "ppa-wordlehelper",
-	"version": "0.1.0",
+	"name": "ppa-wordleboost",
+	"version": "0.2.0",
 	"description": "searches for wordle words",
 	"main": "app.ahk",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Chunjee/ppa-wordlehelper"
+		"url": "https://github.com/Chunjee/ppa-wordleboost"
 	},
 	"dependencies": {
 		"array.ahk": "^0.1.8",
