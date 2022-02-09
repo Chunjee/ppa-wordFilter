@@ -55,18 +55,20 @@
 				aria-controls="v-pills-home" aria-selected="true">Home</a>
 			<a class="nav-link text-light" id="v-pills-suggestions-tab" data-toggle="pill" href="#v-pills-suggestions" role="tab"
 				aria-controls="v-pills-suggestions" aria-selected="false">Suggestions</a>
-			<a class="nav-link text-light" id="v-pills-probabilities-tab" data-toggle="pill" href="#v-pills-probabilities" role="tab"
-				aria-controls="v-pills-probabilities" aria-selected="false">Probabilities</a>
+			<!-- <a class="nav-link text-light" id="v-pills-probabilities-tab" data-toggle="pill" href="#v-pills-probabilities" role="tab"
+				aria-controls="v-pills-probabilities" aria-selected="false">Probabilities</a> -->
 		</div>
 		<!-- End Sidebar -->
 
 		<!-- Page Content -->
 		<div class="flex-grow-1 overflow-auto">
 			<div class="tab-content container p-2" id="v-pills-tabContent">
-
 				<!-- v-pills-home -->
 				<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 					<form onsubmit="ahk.fn_submit(event)">
+						<div class="d-flex float-right">
+							<button id="reset" class="btn btn-secondary">Reset</button>
+						</div>
 						<h3 class="text-success font-weight-bold">Confirmed Letters</h3>
 						<div class="form-group">
 							<div class="form-row">
@@ -158,20 +160,18 @@
 					<div id="ahk_exploreoutput" class="ahk_exploreoutput" style="max-height: 10px; max-width: 100%;"></div>
 				</div>
 				<!-- End v-pills-suggestions -->
-
-				<!-- v-pills-probabilities -->
-				<div class="tab-pane fade" id="v-pills-probabilities" role="tabpanel" aria-labelledby="v-pills-probabilities-tab">
-					<h3>Letter Probabilities</h3>
-					<div id="ahk_exploreoutput" class="ahk_exploreoutput" style="max-height: 10px; max-width: 100%;"></div>
-				</div>
-				<!-- End v-pills-probabilities -->
-
 			</div>
+			<!-- v-pills-probabilities -->
+			<div class="tab-pane fade" id="v-pills-probabilities" role="tabpanel" aria-labelledby="v-pills-probabilities-tab">
+				<h3>Letter Probabilities</h3>
+				<div id="ahk_exploreoutput" class="ahk_exploreoutput" style="max-height: 10px; max-width: 100%;"></div>
+			</div>
+			<!-- End v-pills-probabilities -->
 		</div>
 		<!-- End Page Contents -->
 
 	</div>
 	<!-- End Window Contents -->
 </body>
-
+<script src="index.js"></script>
 </html>
