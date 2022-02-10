@@ -198,7 +198,7 @@ fn_findAllLetterPobabilities(param_haystack, param_validletters, param_blacklist
 	; find percent of each character
 	probArr := []
 	for key, value in freqArr {
-		probArr.push({"prob": biga.round((value / sum) * 100), "char": key})
+		probArr.push({"prob": biga.round(biga.ceil((value / sum) * 100, 1), 1), "char": key})
 	}
 	; sort by highest to lowest
 	probArr := biga.reverse(biga.sortBy(probArr, "prob"))
