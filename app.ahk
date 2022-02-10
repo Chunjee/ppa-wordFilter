@@ -206,7 +206,7 @@ fn_findAllLetterPobabilities(param_haystack, param_validletters, param_blacklist
 	; convert to human readable string for html output
 	readableOutput := []
 	for key, value in probArr {
-		readableOutput.push(value.char " " value.prob "%")
+		readableOutput.push(biga.toUpper(value.char) " " value.prob "%")
 	}
 	return readableOutput
 }
