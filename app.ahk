@@ -66,7 +66,7 @@ fn_submit(neutron, event)
 		if (A.size(formData.blacklistedletters) == 0) {
 			canidatesArr.push(thisWord)
 		} else {
-			eachBlacklistedLetters := strSplit(formData.blacklistedletters)
+			eachBlacklistedLetters := A.uniq(A.compact(strSplit(formData.blacklistedletters)))
 			if (A.intersection(thisWord, eachBlacklistedLetters).length() == 0) {
 				canidatesArr.push(thisWord)
 			}
@@ -112,7 +112,7 @@ fn_submit(neutron, event)
 	neutron.qs("#ahk_output").innerHTML := html
 	neutron.qs("#ahk_canidatesCount").innerHTML := newCanidatesArrFlat.count() " canidate words"
 
-	; exploritory words
+	; --- exploritory words ---
 	exploreWords := fn_sortByMissing(wordsArr, A.difference(commonAlpha, A.concat(validletters, eachBlacklistedLetters)))
 	exploreWordsFlat := []
 	for key, value in exploreWords {
@@ -120,6 +120,12 @@ fn_submit(neutron, event)
 	}
 	html := gui_generateTable(A.chunk(exploreWordsFlat, 5), [1,2,3,4,5], false)
 	neutron.qs("#ahk_exploreoutput").innerHTML := html
+
+	; --- letter probablities ---
+	; get the count of all remaining letters (valid letters will be 100% and blacklist will be 0%)
+	letterProbabilities := fn_findAllLetterPobabilities(canidatesArr, validletters, eachBlacklistedLetters)
+	html := gui_generateTable(A.chunk(letterProbabilities, 5), [1,2,3,4,5], false)
+	neutron.qs("#ahk_proboutput").innerHTML := html
 }
 
 
@@ -172,6 +178,39 @@ fn_sortByMissing(param_canidatesArr, param_remainingcharacters)
 	return biga.reverse(biga.sortBy(canidatesArr, "letters"))
 }
 
+fn_findAllLetterPobabilities(param_haystack, param_validletters, param_blacklistletters)
+{
+	; get count of all letters in haystack
+	flatstack := biga.flatten(param_haystack)
+
+	; remove a blacklisted and valid letters
+	filteredstack := []
+	for key, letter in flatstack {
+		if (!biga.includes(param_blacklistletters, letter) && !biga.includes(param_validletters, letter)) {
+			filteredstack.push(letter)
+		}
+	}
+
+	; sum of all letters
+	freqArr := fn_frequencies(filteredstack)
+	sum := biga.sum(freqArr)
+
+	; find percent of each character
+	probArr := []
+	for key, value in freqArr {
+		probArr.push({"prob": biga.round((value / sum) * 100), "char": key})
+	}
+	; sort by highest to lowest
+	probArr := biga.reverse(biga.sortBy(probArr, "prob"))
+
+	; convert to human readable string for html output
+	readableOutput := []
+	for key, value in probArr {
+		readableOutput.push(value.char " " value.prob "%")
+	}
+	return readableOutput
+}
+
 
 ; ------------------
 ; functions
@@ -218,4 +257,21 @@ fn_chunkTable(param_data)
 	; would be nice if this lined them verticle, currently horizontal
 	l_data := biga.chunk(param_data, 5)
 	return l_data
+}
+
+fn_frequencies(param_array) {
+	; prepare
+	if (!isObject(param_array)) {
+		param_array := strSplit(param_array)
+	}
+
+	; create
+	l_array := []
+	for key, value in param_array {
+		if (l_array[value] == "") {
+			l_array[value] := 0
+		}
+		l_array[value] := l_array[value] + 1
+	}
+	return l_array
 }
