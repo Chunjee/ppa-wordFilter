@@ -1,4 +1,4 @@
-# wordlehelper.ahk
+# Wordle Boost
 A simple wordle solving app with a GUI
 
 <img src="https://github.com/Chunjee/ppa-wordleboost/blob/master/preview.png"/>
