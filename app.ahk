@@ -112,20 +112,21 @@ fn_submit(neutron, event)
 	neutron.qs("#ahk_output").innerHTML := html
 	neutron.qs("#ahk_canidatesCount").innerHTML := newCanidatesArrFlat.count() " canidate words"
 
+	; --- letter probablities ---
+	; get the count of all remaining letters (valid letters will be 100% and blacklist will be 0%)
+	letterProbabilitiesArr := fn_findAllLetterPobabilities(canidatesArr, validletters, eachBlacklistedLetters)
+	letterProbabilitiesTxt := fn_makeLetterProbablesHumanReadible(letterProbabilitiesArr)
+	html := gui_generateTable(A.chunk(letterProbabilitiesTxt, 5), [1,2,3,4,5], false)
+	neutron.qs("#ahk_proboutput").innerHTML := html
+
 	; --- exploritory words ---
-	exploreWords := fn_sortByMissing(wordsArr, A.difference(commonAlpha, A.concat(validletters, eachBlacklistedLetters)))
+	exploreWords := fn_scoreWordSuggestions(wordsArr, letterProbabilitiesArr)
 	exploreWordsFlat := []
 	for key, value in exploreWords {
 		exploreWordsFlat.push(value.word)
 	}
 	html := gui_generateTable(A.chunk(exploreWordsFlat, 5), [1,2,3,4,5], false)
 	neutron.qs("#ahk_exploreoutput").innerHTML := html
-
-	; --- letter probablities ---
-	; get the count of all remaining letters (valid letters will be 100% and blacklist will be 0%)
-	letterProbabilities := fn_findAllLetterPobabilities(canidatesArr, validletters, eachBlacklistedLetters)
-	html := gui_generateTable(A.chunk(letterProbabilities, 5), [1,2,3,4,5], false)
-	neutron.qs("#ahk_proboutput").innerHTML := html
 }
 
 
@@ -165,6 +166,22 @@ return
 ; subroutines
 ; ------------------
 
+fn_scoreWordSuggestions(param_canidatesArr, param_remainingcharacters)
+{
+	canidatesArr := []
+	for _, word in param_canidatesArr {
+		letters := biga.uniq(strSplit(word))
+		score := 0
+		for _, letter in letters {
+			score += biga.find(param_remainingcharacters, {"char": letter}).prob
+		}
+		; remember the word and uniq unknown letters
+		canidatesArr.push({"word": word, "score": score})
+	}
+	; sort and reverse (larger missing numbers to smallest)
+	return biga.reverse(biga.sortBy(canidatesArr, "score"))
+}
+
 ; of remaining words, sort by ones with most missing characters
 fn_sortByMissing(param_canidatesArr, param_remainingcharacters)
 {
@@ -202,15 +219,18 @@ fn_findAllLetterPobabilities(param_haystack, param_validletters, param_blacklist
 	}
 	; sort by highest to lowest
 	probArr := biga.reverse(biga.sortBy(probArr, "prob"))
+	return probArr
+}
 
+fn_makeLetterProbablesHumanReadible(param_arr)
+{
 	; convert to human readable string for html output
 	readableOutput := []
-	for key, value in probArr {
+	for key, value in param_arr {
 		readableOutput.push(biga.toUpper(value.char) " " value.prob "%")
 	}
 	return readableOutput
 }
-
 
 ; ------------------
 ; functions
