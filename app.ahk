@@ -67,6 +67,7 @@ fn_submit(neutron, event)
 			canidatesArr.push(thisWord)
 		} else {
 			eachBlacklistedLetters := A.uniq(A.compact(strSplit(formData.blacklistedletters)))
+			eachBlacklistedLetters := A.difference(eachBlacklistedLetters, validletters)
 			if (A.intersection(thisWord, eachBlacklistedLetters).length() == 0) {
 				canidatesArr.push(thisWord)
 			}
