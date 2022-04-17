@@ -1,6 +1,6 @@
 {
 	"name": "ppa-wordleboost",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"description": "Assists with the Wordle guesses",
 	"main": "app.ahk",
 	"repository": {
