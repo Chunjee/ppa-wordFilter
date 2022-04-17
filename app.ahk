@@ -94,24 +94,19 @@ fn_submit(neutron, event)
 
 
 	; Correct letter, wrong spot
-	unCanidatesArr := fn_createAndFindAllMatches(canidatesArr, {1: formData.wrong1, 2: formData.wrong2, 3: formData.wrong3, 4: formData.wrong4, 5: formData.wrong5})
-	; 122 before optimizations
-
-	; flatten both arrays, as A.difference is slow with complicated objects
-	canidatesArrFlat := fn_joinDeep(canidatesArr)
-	; remove impossible words from canidate array
-	unCanidatesArrFlat := A.uniq(fn_joinDeep(unCanidatesArr))
-	newCanidatesArrFlat := A.difference(canidatesArrFlat, unCanidatesArrFlat)
+	; uses biga.reject to filter impossible words
+	canidatesArr := fn_createAndFindAllMatches(canidatesArr, {1: formData.wrong1, 2: formData.wrong2, 3: formData.wrong3, 4: formData.wrong4, 5: formData.wrong5})
 
 	; turn array into keyed array for html output
+	; also .join any WordArr to a string
 	canidatesArrOutput := []
-	for _, wordArr in newCanidatesArrFlat {
-		canidatesArrOutput.push({"word": wordArr})
+	for _, wordArr in canidatesArr {
+		canidatesArrOutput.push(biga.join(wordArr, ""))
 	}
 
-	html := gui_generateTable(A.chunk(newCanidatesArrFlat, 5), [1,2,3,4,5], false)
+	html := gui_generateTable(A.chunk(canidatesArrOutput, 5), [1,2,3,4,5], false)
 	neutron.qs("#ahk_output").innerHTML := html
-	neutron.qs("#ahk_canidatesCount").innerHTML := newCanidatesArrFlat.count() " canidate words"
+	neutron.qs("#ahk_canidatesCount").innerHTML := canidatesArrOutput.count() " canidate words"
 
 	; --- letter probablities ---
 	; get the count of all remaining letters (valid letters will be 100% and blacklist will be 0%)
@@ -253,15 +248,14 @@ fn_customCompact(param_arr)
 
 fn_createAndFindAllMatches(param_haystack, param_object)
 {
-	allmatches := []
 	for key, value in param_object {
 		value := biga.toArray(value)
 		for key2, value2 in value {
-			allmatches := biga.concat(allmatches, biga.filter(param_haystack, biga.matchesProperty(key, value2)))
-			; msgbox, % biga.print(key ": " value2 " found these: " fn_joinDeep(allmatches))
+			param_haystack := biga.reject(param_haystack, biga.matchesProperty(key, value2))
+			; msgbox, % biga.print(key ": " value2 " found these: " biga.print(param_haystack))
 		}
 	}
-	return allmatches
+	return param_haystack
 }
 
 fn_joinDeep(param_array)
