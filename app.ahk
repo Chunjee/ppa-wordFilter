@@ -1,4 +1,4 @@
-#NoEnv
+﻿#NoEnv
 #NoTrayIcon
 SetBatchLines, -1
 #SingleInstance force
@@ -27,7 +27,7 @@ neutron := new NeutronWindow()
 neutron.Load("gui\index.html")
 ; Use the Gui method to set a custom label prefix for GUI events.
 neutron.Gui("+LabelNeutron")
-neutron.Show("w1400 h1000")
+neutron.Show()
 
 
 ; read and parse needed stuff from cars object
