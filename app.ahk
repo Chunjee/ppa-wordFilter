@@ -38,6 +38,8 @@ fn_submit(neutron, event)
 {
 	; clear gui since this process may take a second or so
 	neutron.qs("#ahk_output").innerHTML := ""
+	neutron.qs("#ahk_exploreoutput").innerHTML := ""
+	neutron.qs("#ahk_proboutput").innerHTML := ""
 
 	; form will redirect the page by default, but we want to handle the form data ourself.
 	event.preventDefault()
@@ -53,9 +55,8 @@ fn_submit(neutron, event)
 	validletters := A.concat(validletters, formData.input1, formData.input2, formData.input3, formData.input4, formData.input5)
 	validletters := A.compact(A.map(validletters, A.toLower))
 	validletters := A.uniq(strSplit(A.join(validletters, "")))
-
 	; do nothing if form is blank
-	if (A.size(blacklistedletters) == 0 && A.size(validletters) == 0) {
+	if (A.size(formData.blacklistedletters) == 0 && A.size(validletters) == 0) {
 		return
 	}
 
