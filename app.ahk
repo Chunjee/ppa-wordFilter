@@ -1,4 +1,4 @@
-﻿#NoEnv
+#NoEnv
 #NoTrayIcon
 SetBatchLines, -1
 #SingleInstance force
@@ -9,6 +9,9 @@ SetBatchLines, -1
 #Include biga.ahk\export.ahk
 #Include array.ahk\export.ahk
 #Include neutron.ahk\export.ahk
+
+; other dependancies
+fileInstall, words.txt, words.txt
 
 ; variables
 global A := new biga()
