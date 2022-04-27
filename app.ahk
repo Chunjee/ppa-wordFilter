@@ -38,6 +38,7 @@ fn_submit(neutron, event)
 {
 	; clear gui since this process may take a second or so
 	neutron.qs("#ahk_output").innerHTML := ""
+	neutron.qs("#ahk_canidatesCount").innerHTML := ""
 	neutron.qs("#ahk_exploreoutput").innerHTML := ""
 	neutron.qs("#ahk_proboutput").innerHTML := ""
 
