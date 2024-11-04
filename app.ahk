@@ -65,15 +65,16 @@ fn_submit(neutron, event)
 	}
 
 	canidatesArr := []
+	blocklistedLetters := []
 	; remove blacklisted letter words
 	for _, word in wordsArr {
 		thisWord := strSplit(word)
 		if (A.size(formData.blacklistedletters) == 0) {
 			canidatesArr.push(thisWord)
 		} else {
-			eachBlacklistedLetters := A.uniq(A.compact(strSplit(formData.blacklistedletters)))
-			eachBlacklistedLetters := A.difference(eachBlacklistedLetters, validletters)
-			if (A.intersection(thisWord, eachBlacklistedLetters).length() == 0) {
+			blocklistedLetters := A.uniq(A.compact(strSplit(formData.blacklistedletters)))
+			blocklistedLetters := A.difference(blocklistedLetters, validletters)
+			if (A.intersection(thisWord, blocklistedLetters).length() == 0) {
 				canidatesArr.push(thisWord)
 			}
 		}
@@ -115,7 +116,7 @@ fn_submit(neutron, event)
 
 	; --- letter probablities ---
 	; get the count of all remaining letters (valid letters will be 100% and blacklist will be 0%)
-	letterProbabilitiesArr := fn_findAllLetterPobabilities(canidatesArr, validletters, eachBlacklistedLetters)
+	letterProbabilitiesArr := fn_findAllLetterPobabilities(canidatesArr, validletters, blocklistedLetters)
 	letterProbabilitiesTxt := fn_makeLetterProbablesHumanReadible(letterProbabilitiesArr)
 	html := gui_generateTable(A.chunk(letterProbabilitiesTxt, 5), [1,2,3,4,5], false)
 	neutron.qs("#ahk_proboutput").innerHTML := html
